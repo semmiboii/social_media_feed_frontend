@@ -1,8 +1,7 @@
-import { NavLink } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useMutation } from "react-query";
 import toast from "react-hot-toast";
-import axios from "axios";
 
 import "./sign-up.scss";
 
@@ -10,9 +9,14 @@ export default function SignUp({ mode }) {
   const signUpMode = "signup";
   const loginMode = "login";
 
-  const userEmailRef = useRef();
+  const navigate = useNavigate();
 
-  const [userInfo, setUserInfo] = useState();
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,43 +25,67 @@ export default function SignUp({ mode }) {
       ...prevVal,
       [name]: value,
     }));
-
-    console.log(userInfo);
   };
 
-  const addUser = (userInfo) => {
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/user/new`, userInfo);
-  };
+  const userMutate = useMutation({
+    mutationFn: async (userInfo) => {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/user/new`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userInfo),
+        }
+      );
 
-  const findUser = () => {
-    axios.get(
-      `${process.env.REACT_APP_BACKEND_URL}/user/${userEmailRef.current.value}`
-    );
-  };
-
-  const userMutation = useMutation({
-    mutationFn: addUser,
+      const data = await response.json();
+      return data;
+    },
   });
 
-  const userQuery = useQuery({
-    queryFn: findUser,
-  });
+  const userCreds = useMutation({
+    mutationFn: async (userInfo) => {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userInfo),
+        }
+      );
 
-  const handleSubmit = (e) => {
+      const data = await response.json();
+      return data;
+    },
+  });
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (mode === signUpMode) {
-      userMutation.mutate(userInfo);
-      if (userMutation.data) {
-        console.log(userMutation.data);
-        toast.success("Succesfully Created");
-      } else {
-        console.log(userMutation.error);
+      const data = await userMutate.mutateAsync(userInfo);
+      if (!data.error) {
+        toast.success("Succesfully Created ", data);
+      } else if (data.error) {
+        toast.error(data.error);
       }
     }
 
     if (mode === loginMode) {
-      console.log(userQuery.data);
+      const data = await userCreds.mutateAsync(userInfo);
+      if (data.userId) {
+        toast.success(`Hi ${data.userName}`);
+        sessionStorage.setItem("userId", data.userId);
+        sessionStorage.setItem("isAuthenticated", true);
+        navigate("/");
+      }
+
+      if (data.error) {
+        toast.error(data.error);
+      }
     }
   };
 
@@ -79,16 +107,16 @@ export default function SignUp({ mode }) {
         )}
         <div className="user_email">
           <h4>Email</h4>
-          <input
-            type="email"
-            name="mail"
-            ref={userEmailRef}
-            onChange={handleChange}
-          />
+          <input type="email" name="email" onChange={handleChange} required />
         </div>
         <div className="user_password">
           <h4>Password</h4>
-          <input type="password" name="password" onChange={handleChange} />
+          <input
+            type="password"
+            name="password"
+            onChange={handleChange}
+            required
+          />
         </div>
         <button>{mode === signUpMode ? "Sign Up" : "Login"}</button>
         {mode === signUpMode && (

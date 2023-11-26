@@ -7,9 +7,9 @@
 
 .post_form {
   display: grid;
-  grid-template-rows: 15% 35% 35% 15%;
-  height: 90%;
-  width: 80%;
+  grid-template-rows: repeat(3,1fr);
+  height: 50%;
+  width: 70%;
   align-items: center;
   font-family: var(--font-family);
   border: 1px solid var(--border-color);

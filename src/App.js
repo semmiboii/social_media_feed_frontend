@@ -1,32 +1,43 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Root from "./components/root";
-import Posts from "./components/posts";
-import PostForm from "./components/post-form";
 import { QueryClient, QueryClientProvider } from "react-query";
-import SignUp from "./components/sign-up";
+import { Toaster } from "react-hot-toast";
+
+import RootLayout, { loader as rootLoader } from "./pages/Root";
+import Feed, { loader as feedLoader } from "./pages/Feed";
+import UserPage, { loader as userLoader } from "./pages/User";
+import CreatePost, { loader as createPostLoader } from "./pages/Create";
+import Signup from "./pages/Signup";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <RootLayout />,
+    loader: rootLoader,
     children: [
       {
         index: true,
-        element: <Posts />,
+        element: <Feed />,
+        loader: feedLoader,
       },
       {
         path: "/post/new",
-        element: <PostForm />,
+        element: <CreatePost />,
+        loader: createPostLoader,
+      },
+      {
+        path: "/user",
+        element: <UserPage />,
+        loader: userLoader,
       },
     ],
   },
   {
     path: "/signup",
-    element: <SignUp mode="signup" />,
+    element: <Signup mode="signup" />,
   },
   {
     path: "/login",
-    element: <SignUp mode="login" />,
+    element: <Signup mode="login" />,
   },
 ]);
 
@@ -35,6 +46,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <Toaster position="bottom-center" />
       <RouterProvider router={router}></RouterProvider>
     </QueryClientProvider>
   );

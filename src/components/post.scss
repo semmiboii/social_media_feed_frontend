@@ -1,7 +1,6 @@
 .post_wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%;
   width: 90%;
   border: 1px solid var(--border-color);
   border-radius: 10px;
@@ -46,7 +45,7 @@
     }
   }
   & .post_time {
-    border: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color);
     text-align: end;
     padding: 10px 20px 10px 0;
   }

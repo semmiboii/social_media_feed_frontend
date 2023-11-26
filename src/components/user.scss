@@ -1,0 +1,41 @@
+.user_wrapper {
+  display: grid;
+  grid-template-rows: 10% 10% 10% 60% 10%;
+  position: relative;
+  height: 100%;
+  & h3 {
+    margin: 10px 20px;
+  }
+  & .user_username,
+  .user_name,
+  .user_email {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+  }
+  & .user_posts {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+  }
+
+  & .user_controls {
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    & .user_logout_btn {
+      padding: 5px 20px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+  }
+}
