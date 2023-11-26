@@ -26,10 +26,6 @@ body {
 }
 
 code {
-<<<<<<< HEAD
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-=======
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
->>>>>>> 358a6ec (Initialize project using Create React App)
     monospace;
 }
