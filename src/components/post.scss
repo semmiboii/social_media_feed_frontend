@@ -31,9 +31,12 @@
       & .post_liked {
         background-color: green;
       }
+      & .comments_opened {
+        background-color: slategray;
+      }
     }
   }
-  & .post_footer {
+  & .post_body {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -43,11 +46,18 @@
     h3 {
       margin: 0;
     }
+    & .post_comments {
+      border-top: 4px solid slateblue;
+      padding: 20px 0;
+      position: relative;
+    }
   }
-  & .post_time {
+  & .post_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-top: 1px solid var(--border-color);
-    text-align: end;
-    padding: 10px 20px 10px 0;
+    padding: 5px 20px;
   }
 }
 

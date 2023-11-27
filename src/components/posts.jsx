@@ -13,9 +13,11 @@ export default function Posts({ posts }) {
             title={post.title}
             description={post.description}
             timestamp={post.timestamp}
+            comments={post.comments}
+            post={post}
           />
         ))}
-      {!posts && posts.length === 0 && "NO_POSTS"}
+      {!posts && posts.length === 0 && <h2>NO_POSTS</h2>}
     </div>
   );
 }

@@ -7,12 +7,12 @@
 
 .post_form {
   display: grid;
-  grid-template-rows: repeat(3,1fr);
+  grid-template-rows: repeat(3, 1fr);
   height: 50%;
   width: 70%;
   align-items: center;
   font-family: var(--font-family);
-  border: 1px solid var(--border-color);
+  border: 5px solid var(--border-color);
   padding: 20px;
   border-radius: 30px;
   gap: 5px;

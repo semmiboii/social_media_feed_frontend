@@ -81,10 +81,8 @@ export default function SignUp({ mode }) {
         sessionStorage.setItem("userId", data.userId);
         sessionStorage.setItem("isAuthenticated", true);
         navigate("/");
-      }
-
-      if (data.error) {
-        toast.error(data.error);
+      } else {
+        toast.error("SOMETHING_WENT_WRONG");
       }
     }
   };

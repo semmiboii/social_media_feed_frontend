@@ -1,0 +1,34 @@
+.comment_wrapper {
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 10px;
+  & h4,
+  p {
+    margin: 0;
+  }
+  & .comment_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: var(--border);
+    padding-bottom: 10px;
+  }
+  & .comment_header_options {
+    width: 30%;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    align-items: center;
+    & span {
+      padding-right: 15px;
+    }
+    & > div:active {
+      background-color: red;
+    }
+  }
+  & .comment_body {
+    padding: 15px 5px;
+  }
+}

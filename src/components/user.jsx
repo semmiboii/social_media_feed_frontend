@@ -1,9 +1,21 @@
+import { useQuery } from "react-query";
 import Post from "./post";
 
 import "./user.scss";
 
 export default function User({ user, handleClick }) {
-  console.log(user);
+  const getPosts = useQuery({
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/post/${user._id}`
+      );
+      const data = await res.json();
+      return data;
+    },
+    queryKey: ["post", user._id],
+  });
+
+  const { isLoading, data: posts, isSuccess } = getPosts;
 
   return (
     <div className="user_wrapper">
@@ -17,14 +29,15 @@ export default function User({ user, handleClick }) {
         <h3>email - {user?.email}</h3>
       </div>
       <div className="user_posts">
-        {user && user.length !== 0 ? (
-          user.posts.map((post) => (
+        {user && !isLoading && isSuccess && posts?.length !== 0 ? (
+          posts?.map((post) => (
             <Post
               key={post._id}
               author={post.author}
               title={post.title}
               description={post.description}
               timestamp={post.timestamp}
+              post={post}
             />
           ))
         ) : (

@@ -47,7 +47,6 @@ export default function PostForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = await postMutation.mutateAsync(post);
-    console.log(data);
     if (data) {
       toast.success("POST_SUCCESSFULLY_CREATED");
     } else {

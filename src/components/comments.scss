@@ -1,0 +1,44 @@
+.comments_wrapper {
+  position: relative;
+
+  outline: 0;
+  border-radius: var(--border-radius);
+  & .comments_holder {
+    height: 400px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    overflow-y: scroll;
+  }
+  & .comments_add_wrapper {
+    display: flex;
+    width: 100%;
+    & .comments_add {
+      display: flex;
+      gap: 5px;
+      width: 100%;
+      & input,
+      button {
+        font-family: var(--font-family);
+        background-color: var(--background-color);
+        width: 90%;
+        position: relative;
+        top: 10px;
+        padding: 15px;
+        outline: 0;
+        border: 0;
+        border-radius: var(--border-radius);
+        transition: background 0.05s linear;
+      }
+      & .comment_add_btn {
+        width: 10%;
+        position: relative;
+        &:active {
+          background: green;
+        }
+      }
+    }
+  }
+}
