@@ -6,26 +6,7 @@ import toast from "react-hot-toast";
 import "./sign-up.scss";
 
 export default function SignUp({ mode }) {
-  const signUpMode = "signup";
-  const loginMode = "login";
-
   const navigate = useNavigate();
-
-  const [userInfo, setUserInfo] = useState({
-    username: "",
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setUserInfo((prevVal) => ({
-      ...prevVal,
-      [name]: value,
-    }));
-  };
 
   const userMutate = useMutation({
     mutationFn: async (userInfo) => {
@@ -48,7 +29,7 @@ export default function SignUp({ mode }) {
   const userCreds = useMutation({
     mutationFn: async (userInfo) => {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/user`,
+        `${process.env.REACT_APP_BACKEND_URL}/user/login`,
         {
           method: "POST",
           headers: {
@@ -62,27 +43,56 @@ export default function SignUp({ mode }) {
       return data;
     },
   });
+
+  const signUpMode = "signup";
+  const loginMode = "login";
+
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setUserInfo((prevVal) => ({
+      ...prevVal,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (mode === signUpMode) {
-      const data = await userMutate.mutateAsync(userInfo);
-      if (!data.error) {
-        toast.success("Succesfully Created ", data);
-      } else if (data.error) {
-        toast.error(data.error);
+      try {
+        const data = await userMutate.mutateAsync(userInfo);
+        if (data.username) {
+          toast.success("Succesfully Created ", data);
+        } else {
+          toast.error(data.error);
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
 
     if (mode === loginMode) {
-      const data = await userCreds.mutateAsync(userInfo);
-      if (data.userId) {
-        toast.success(`Hi ${data.userName}`);
-        sessionStorage.setItem("userId", data.userId);
-        sessionStorage.setItem("isAuthenticated", true);
-        navigate("/");
-      } else {
-        toast.error("SOMETHING_WENT_WRONG");
+      try {
+        const data = await userCreds.mutateAsync(userInfo);
+        console.log(data);
+        if (!data.error) {
+          toast.success(`Hi ${data.userName}`);
+          sessionStorage.setItem("userId", data.userId);
+          sessionStorage.setItem("isAuthenticated", true);
+          navigate("/");
+        } else {
+          toast.error(data.error);
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
   };
@@ -94,13 +104,18 @@ export default function SignUp({ mode }) {
         {mode === signUpMode && (
           <div className="user_username">
             <h4>username</h4>
-            <input type="text" name="username" onChange={handleChange} />
+            <input
+              type="text"
+              name="username"
+              onChange={handleChange}
+              required
+            />
           </div>
         )}
         {mode === signUpMode && (
           <div className="user_name">
             <h4>Name</h4>
-            <input type="text" name="name" onChange={handleChange} />
+            <input type="text" name="name" onChange={handleChange} required />
           </div>
         )}
         <div className="user_email">

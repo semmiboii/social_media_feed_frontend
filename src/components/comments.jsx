@@ -1,15 +1,14 @@
+import toast from "react-hot-toast";
+import Comment from "./comment";
+
 import { useState } from "react";
-import { useMutation, useQuery } from "react-query";
 import { queryClient } from "../App";
+import { useMutation, useQuery } from "react-query";
 
 import { IoMdAdd } from "react-icons/io";
-import Comment from "./comment";
-import toast from "react-hot-toast";
 import "./comments.scss";
 
 export default function Comments({ post }) {
-  const [comment, setComment] = useState("");
-
   const getComments = useQuery({
     queryFn: async () => {
       const res = await fetch(
@@ -41,6 +40,9 @@ export default function Comments({ post }) {
     },
   });
 
+  const [comment, setComment] = useState("");
+  const commentData = getComments.data;
+
   const handleChange = (e) => {
     const { value } = e.target;
     setComment(value);
@@ -63,8 +65,6 @@ export default function Comments({ post }) {
     }
   };
 
-  const commentData = getComments.data;
-
   return (
     <div className="comments_wrapper">
       <div className="comments_holder">
@@ -80,7 +80,7 @@ export default function Comments({ post }) {
             />
           ))}
         {getComments.isLoading && <h4>Loading...</h4>}
-        {!getComments.data && <h4>No Comments</h4>}
+        {!commentData || (commentData.length === 0 && <h4>No Comments</h4>)}
       </div>
       <div className="comments_add_wrapper">
         <div className="comments_add">

@@ -1,5 +1,5 @@
 import "./post.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FiMessageCircle } from "react-icons/fi";
 import { AiOutlineLike } from "react-icons/ai";
@@ -11,10 +11,18 @@ import toast from "react-hot-toast";
 import { queryClient } from "../App";
 
 export default function Post({ author, title, description, timestamp, post }) {
-  const [liked, setLiked] = useState(post.like);
-  const [expanded, setExpanded] = useState(false);
-
   const userId = sessionStorage.getItem("userId");
+
+  const getLike = useQuery({
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/post/${post._id}/${userId}/like`
+      );
+      const data = res.json();
+      return data;
+    },
+    queryKey: ["like"],
+  });
 
   const getLikes = useQuery({
     queryFn: async () => {
@@ -41,18 +49,42 @@ export default function Post({ author, title, description, timestamp, post }) {
       const data = await res.json();
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["post", post._id]);
+    onSuccess: (data) => {
+      if (data && data.message === "SUCCESS") {
+        setLiked(getLike.data);
+        queryClient.invalidateQueries(["post", post._id]);
+        toast.success(data.message);
+      } else {
+        setLiked(!liked);
+        toast.error("Failed to update like status");
+      }
+    },
+    onError: () => {
+      toast.error("Failed to update like status");
     },
   });
 
+  const { data: like } = getLike;
+  const { data: likeCount } = getLikes;
+
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => setLiked(like), [setLiked, like]);
+
   const handleClick = async () => {
-    setLiked(!liked);
-    const likedPost = await updateLike.mutateAsync();
-    if (likedPost.isSuccess) {
-      toast.success(likedPost.message);
+    try {
+      await updateLike.mutateAsync();
+      setLiked(!liked);
+    } catch (error) {
+      toast.error("Failed to update like status");
     }
   };
+
+  const handleCommentClick = () => {
+    setExpanded((prevVal) => !prevVal);
+  };
+
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <div className="post_wrapper">
@@ -64,11 +96,11 @@ export default function Post({ author, title, description, timestamp, post }) {
           <Button
             icon={<AiOutlineLike />}
             onClick={handleClick}
-            className={liked && "post_liked"}
+            className={liked ? "post_liked" : ""}
           />
           <Button
             icon={<FiMessageCircle />}
-            onClick={() => setExpanded((prevVal) => !prevVal)}
+            onClick={handleCommentClick}
             className={expanded && "comments_opened"}
           />
         </div>
@@ -83,7 +115,7 @@ export default function Post({ author, title, description, timestamp, post }) {
         )}
       </div>
       <div className="post_footer">
-        <h4>Likes: {getLikes.data?.likeCount}</h4>
+        <h4>Likes: {likeCount?.likeCount}</h4>
         {timestamp.split("T")[0]}
       </div>
     </div>

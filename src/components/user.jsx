@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
 import Post from "./post";
+import { useQuery } from "react-query";
 
 import "./user.scss";
 
@@ -12,10 +12,11 @@ export default function User({ user, handleClick }) {
       const data = await res.json();
       return data;
     },
-    queryKey: ["post", user._id],
+    queryKey: ["user_posts", "post"],
   });
 
   const { isLoading, data: posts, isSuccess } = getPosts;
+  console.log(posts);
 
   return (
     <div className="user_wrapper">

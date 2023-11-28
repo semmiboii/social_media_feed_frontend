@@ -4,23 +4,9 @@ import { useLoaderData } from "react-router-dom";
 
 import "./post-form.scss";
 import toast from "react-hot-toast";
+import { queryClient } from "../App";
 
 export default function PostForm() {
-  const [post, setPost] = useState({
-    title: "",
-    description: "",
-    comments: [],
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setPost((prevVal) => ({
-      ...prevVal,
-      [name]: value,
-    }));
-  };
-
   const user = useLoaderData();
 
   const postMutation = useMutation({
@@ -42,7 +28,25 @@ export default function PostForm() {
       const data = await response.json();
       return data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts", "likes", "like"]);
+    },
   });
+
+  const [post, setPost] = useState({
+    title: "",
+    description: "",
+    comments: [],
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setPost((prevVal) => ({
+      ...prevVal,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
