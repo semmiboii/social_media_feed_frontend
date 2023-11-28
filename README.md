@@ -35,5 +35,7 @@ The Backend Is Deployed On -
 
 **Client:** React, Tanstack Query, HTML, CSS, JS
 
-**Server:** Node, Express
+**Server:** Node, Express, Mongoose
+
+**Database:** MongoDB
 
