@@ -7,7 +7,7 @@ To Start the app fast you can visit the deployed website.
 
 ***NOTE- MAKE SURE TO VISIT THE BACKEND LINK FIRST AS IT TAKES SOME TIME TO BRING THE SERVER FROM INACTIVE STATE TO ACTIVE STATE***
 
-### ALSO NOTE -
+### ALSO NOTE
 
 **THE WEBSITE WOULD NOT WORK LOCALLY AS I HAVE NOT SHARED THE ENVIORNMENT VARIABLES**
 
@@ -20,7 +20,7 @@ To Start the app fast you can visit the deployed website.
 
 ## Deployment
 
- ### ** The Project Is Already Deployed** 
+### The Project Is Already Deployed
 
 The Frontend made with React is on -
 
